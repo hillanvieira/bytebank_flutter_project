@@ -1,4 +1,3 @@
-import 'package:bytebank/models/tranferencia.dart';
 import 'package:bytebank/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

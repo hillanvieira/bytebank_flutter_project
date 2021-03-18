@@ -1,47 +1,44 @@
 import 'package:bytebank/models/tranferencia.dart';
+import 'package:bytebank/models/transferencias.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'formulario.dart';
 
-class ListaTransferencias extends StatefulWidget {
-final List<Transferencia> _transferencias = [];
 
-@override
-_ListaTransferenciaState createState() {
-  return _ListaTransferenciaState();
-}
-}
+class ListaTransferencia extends StatelessWidget {
 
-class _ListaTransferenciaState extends State<ListaTransferencias> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Transferências'),
       ),
-      body: ListView.builder(
-        itemCount: widget._transferencias.length,
-        itemBuilder: (context, index) {
-          final transferencia = widget._transferencias[index];
-          return ItemTransferencia(transferencia);
-        },
+      body: Consumer<Transferencias>(
+        builder:(context, listaTransferencias, child){
+          return ListView.builder(
+          itemCount: listaTransferencias.tranferencias.length,
+          itemBuilder: (context, index) {
+            final transferencia = listaTransferencias.tranferencias[index];
+            return ItemTransferencia(transferencia);
+          },
+        );},
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return FormularioTransferencia();
           })).then((transferenciaRecebida) =>
-              _atualiza(transferenciaRecebida));
+              _atualiza(transferenciaRecebida, context));
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  void _atualiza(Transferencia transferenciaRecebida) {
+  void _atualiza(Transferencia transferenciaRecebida, BuildContext context) {
     if (transferenciaRecebida != null) {
-      setState(() => widget._transferencias.add(transferenciaRecebida));
+      Provider.of<Transferencias>(context, listen: false).adiciona(transferenciaRecebida);
     }
   }
 }
