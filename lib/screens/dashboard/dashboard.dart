@@ -1,7 +1,7 @@
 import 'package:bytebank/screens/dashboard/saldo.dart';
 import 'package:bytebank/screens/deposito/formulario.dart';
 import 'package:bytebank/screens/transferencia/formulario.dart';
-import 'package:bytebank/screens/transferencia/lista.dart';
+import 'package:bytebank/screens/transferencia/ultimas.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -29,7 +29,9 @@ class Dashboard extends StatelessWidget {
                   ));
                 },
                 child: Text('Receber depósito'),
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.green)),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -40,21 +42,13 @@ class Dashboard extends StatelessWidget {
                   ));
                 },
                 child: Text('Nova Transferência'),
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.green)),
               ),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return ListaTransferencia();
-                },
-              ));
-            },
-            child: Text('Transferências'),
-            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-          ),
+          UltimasTranferencias(),
         ],
       ),
     );
