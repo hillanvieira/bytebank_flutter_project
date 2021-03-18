@@ -1,7 +1,10 @@
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/models/saldo.dart';
 import 'package:bytebank/models/tranferencia.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:bytebank/models/transferencias.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:provider/provider.dart';
 
 const _tituloAppBar = 'Criando Transferência';
 const _rotuloCampoValor = "valor";
@@ -38,27 +41,59 @@ class FormularioTransferencia extends StatelessWidget {
               ),
               ElevatedButton(
                 child: Text(_textoBotaoConfirmar),
-                onPressed: () => _criaTransferencia(context),
+                onPressed: () {
+                  _criaTransferencia(context);
+                },
               )
             ],
           ),
         ));
   }
 
-  void _criaTransferencia(BuildContext context) {
+  void _criaTransferencia(BuildContext context) async {
     final int numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
     final double valor = double.tryParse(_controladorCampoValor.text);
-    if (numeroConta != null && valor != null) {
-      final transferenciaCriada = Transferencia(
+    double _saldo = Provider.of<Saldo>(context, listen: false).valor;
+    if (_validaTransferencia(numeroConta, valor)) {
+      final novaTransferencia = Transferencia(
         valor,
         numeroConta,
       );
-      //debugPrint("Criando Transferencia");
-      //debugPrint('$transferenciaCriada');
-      Navigator.pop(
-        context,
-        transferenciaCriada,
-      );
+
+      if (_saldo < valor) {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return Consumer<Saldo>(builder: (context, saldo, child) {
+                return AlertDialog(
+                  title:
+                      Text('Saldo insuficiente', textAlign: TextAlign.center),
+                  content: SizedBox(
+                    height: 100,
+                    child: Column(
+                      children: [
+                        Icon(Icons.warning_amber_outlined,
+                            size: 80, color: Colors.red),
+                      ],
+                    ),
+                  ),
+                );
+              });
+            });
+
+        Navigator.pop(context);
+      } else {
+        _atualizaEsttado(context, novaTransferencia);
+      }
     }
+  }
+
+  void _atualizaEsttado(BuildContext context, Transferencia transferencia) {
+    Provider.of<Transferencias>(context, listen: false).Adiciona(transferencia);
+    Provider.of<Saldo>(context, listen: false).subtrai(transferencia.valor);
+  }
+
+  bool _validaTransferencia(int numeroConta, double valor) {
+    return numeroConta != null && valor != null;
   }
 }

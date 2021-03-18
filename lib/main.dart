@@ -1,14 +1,16 @@
+import 'package:bytebank/models/tranferencia.dart';
 import 'package:bytebank/screens/dashboard/dashboard.dart';
-import 'package:bytebank/screens/deposito/formulario.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'models/saldo.dart';
+import 'models/transferencias.dart';
 
-void main() => runApp(ChangeNotifierProvider(
-      create: (context) {
-        return Saldo(11);
-      },
+void main() => runApp(MultiProvider(
+      providers: [
+         ChangeNotifierProvider(create: (context){return Saldo(0.0);}),
+         ChangeNotifierProvider(create: (context){return Transferencias();}),
+      ],
       child: BytebankApp(),
     ));
 
